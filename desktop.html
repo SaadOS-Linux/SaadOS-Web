@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SaadOS Desktop</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    @font-face {
+        font-family: 'dos';
+        src: url(./fonts/dos.ttf);
+    }
+
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: radial-gradient(circle at center, #04110b 0%, #010805 100%);
+        font-family: 'dos', monospace;
+        color: #00ffaa;
+        overflow: hidden;
+        cursor: default;
+        user-select: none;
+    }
+
+    /* Desktop area */
+    #desktop {
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+
+    /* App icon */
+    .icon {
+        position: absolute;
+        top: 60px;
+        left: 60px;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    .icon img {
+        width: 64px;
+        height: 64px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .icon span {
+        display: block;
+        color: #bafbdc;
+        font-size: 0.9em;
+        margin-top: 6px;
+    }
+
+    .icon:hover {
+        transform: scale(1.08);
+    }
+
+    /* Window styling */
+    .window {
+        position: absolute;
+        top: 120px;
+        left: 200px;
+        width: 800px;
+        height: 500px;
+        background-color: #101a15;
+        border: 1px solid #00ffaa55;
+        border-radius: 8px;
+        box-shadow: 0 0 20px #00ffaa22;
+        display: none;
+        flex-direction: column;
+        resize: both;
+        overflow: hidden;
+    }
+
+    .window-header {
+        background-color: #082219;
+        color: #a0ffd9;
+        padding: 6px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: move;
+        font-size: 0.9em;
+        user-select: none;
+    }
+
+    .window-buttons {
+        display: flex;
+        gap: 6px;
+    }
+
+    .window-buttons div {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .close-btn { background: #ff5f56; }
+    .min-btn { background: #ffbd2e; }
+    .max-btn { background: #27c93f; }
+
+    iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        flex: 1;
+        background: #0d1511;
+    }
+
+    @keyframes fadeIn {
+        from {opacity: 0;}
+        to {opacity: 1;}
+    }
+
+    @keyframes fadeOut {
+        from {opacity: 1;}
+        to {opacity: 0;}
+    }
+</style>
+<script src="scripts/jq.min.js"></script>
+</head>
+<body>
+<div id="desktop">
+    <div class="icon" id="browser-icon">
+        <img src="images/browser.png" alt="SaadBrowser">
+        <span>SaadBrowser</span>
+    </div>
+
+    <div class="window" id="browser-window">
+        <div class="window-header" id="browser-header">
+            <span>SaadBrowser</span>
+            <div class="window-buttons">
+                <div class="min-btn"></div>
+                <div class="max-btn"></div>
+                <div class="close-btn"></div>
+            </div>
+        </div>
+        <iframe id="browser-frame" src=""></iframe>
+    </div>
+</div>
+
+<script>
+$(function() {
+    const $window = $("#browser-window");
+    const $frame = $("#browser-frame");
+    const $icon = $("#browser-icon");
+
+    // open browser icon click
+    $icon.on("click", function() {
+        const confirmed = confirm("You are about to leave SaadOS and open an external website.\nDo you wish to continue?");
+        if (!confirmed) return;
+        $window.css("display", "flex").hide().fadeIn(300);
+        $frame.attr("src", "https://calm-daffodil-7a888b.netlify.app/");
+    });
+
+    // close
+    $(".close-btn").on("click", function() {
+        $window.fadeOut(300, () => $frame.attr("src", ""));
+    });
+
+    // minimize
+    $(".min-btn").on("click", function() {
+        $window.fadeOut(300);
+    });
+
+    // maximize / restore
+    let maximized = false;
+    $(".max-btn").on("click", function() {
+        if (!maximized) {
+            $window.css({top: "0", left: "0", width: "100%", height: "100%"});
+        } else {
+            $window.css({top: "120px", left: "200px", width: "800px", height: "500px"});
+        }
+        maximized = !maximized;
+    });
+
+    // drag window
+    let isDragging = false, offsetX, offsetY;
+    $("#browser-header").on("mousedown", function(e) {
+        isDragging = true;
+        const rect = $window[0].getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+    });
+    $(document).on("mousemove", function(e) {
+        if (isDragging) {
+            $window.css({ top: e.clientY - offsetY, left: e.clientX - offsetX });
+        }
+    }).on("mouseup", function() { isDragging = false; });
+});
+</script>
+</body>
+</html>
