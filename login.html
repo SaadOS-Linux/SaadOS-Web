@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - SaadOS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @font-face {
+            font-family: 'dos';
+            src: url(./fonts/dos.ttf);
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #020f0a; /* black with slight green tint */
+            color: #d0f0e0;
+            font-family: 'dos', monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .login-container {
+            text-align: center;
+            animation: fadeIn 1s ease;
+        }
+
+        .account {
+            display: inline-block;
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .account:hover {
+            background-color: rgba(0, 255, 150, 0.05);
+            transform: scale(1.05);
+        }
+
+        .account img {
+            width: 300px;
+            border-radius: 50%;
+            border: 2px solid #00ffaa;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .account:hover img {
+            border-color: #00ffcc;
+            box-shadow: 0 0 10px #00ffcc33;
+        }
+
+        .account-name {
+            font-size: 1.2em;
+            color: #00ffaa;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; transform: scale(1.05); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+
+    <script src="scripts/jq.min.js"></script>
+</head>
+<body>
+    <div class="login-container">
+        <div class="account" id="admin-account">
+            <img src="images/user.webp" width="500px" alt="Administrator">
+            <div class="account-name">Administrator</div>
+        </div>
+    </div>
+
+    <script>
+        $("#admin-account").on("click", function() {
+            $("body").css("animation", "fadeOut 0.8s ease forwards");
+            setTimeout(function() {
+                window.location.href = "desktop.html";
+            }, 800);
+        });
+    </script>
+</body>
+</html>
