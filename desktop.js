@@ -1,0 +1,168 @@
+$(function () {
+
+    function openApp(appID, url, title, iconPath) {
+
+        const $window = $(`#${appID}-window`);
+        const $frame  = $window.find("iframe");
+
+
+        $window.css("display", "flex").hide().fadeIn(200);
+        if (url) $frame.attr("src", url);
+
+
+        if (!$(`#task-${appID}`).length) {
+            $("#task-items").append(`
+                <div class="task-icon" id="task-${appID}">
+                    <img src="${iconPath}" style="width:22px; height:22px; margin-right:6px;">
+                    <span>${title}</span>
+                    <button class="task-close" data-app="${appID}" 
+                        style="
+                        margin-left:8px;
+                        background:#ff5f56;
+                        color:white;
+                        border:none;
+                        width:18px;
+                        height:18px;
+                        border-radius:50%;
+                        cursor:pointer;
+                        font-weight:bold;
+                        ">×</button>
+                </div>
+            `);
+
+
+            $(`#task-${appID}`).on("click", function (e) {
+
+                
+
+
+
+                if ($(e.target).hasClass("task-close")) return;
+
+                $window.fadeIn(200);
+            });
+
+
+            $(`.task-close[data-app="${appID}"]`).on("click", function () {
+                $window.fadeOut(200);
+                $frame.attr("src", "");
+                $(`#task-${appID}`).remove();
+            });
+        }
+
+
+        $window.find(".close-btn").off().on("click", function () {
+            $window.fadeOut(200);
+            $frame.attr("src", "");
+            $(`#task-${appID}`).remove();
+        });
+
+        $window.find(".min-btn").off().on("click", function () {
+            $window.fadeOut(200);
+        });
+
+
+
+
+        let maximized = false;
+        let oldPos = {};
+        $window.find(".max-btn").off().on("click", function () {
+
+            if (!maximized) {
+                oldPos = {
+                    top: $window.css("top"),
+                    left: $window.css("left"),
+                    width: $window.css("width"),
+                    height: $window.css("height"),
+                };
+
+                $window.css({
+                    top: "0",
+                    left: "0",
+                    width: "100%",
+                    height: "calc(100% - 40px)"
+                });
+
+            } else {
+                // restore
+                $window.css({
+                    top: oldPos.top,
+                    left: oldPos.left,
+                    width: oldPos.width,
+                    height: oldPos.height
+                });
+            }
+
+            maximized = !maximized;
+        });
+
+
+
+        let drag = false, offX, offY;
+        $window.find(".window-header").off().on("mousedown", function (e) {
+            drag = true;
+            const rect = $window[0].getBoundingClientRect();
+            offX = e.clientX - rect.left;
+            offY = e.clientY - rect.top;
+        });
+
+
+
+
+        $(document).on("mousemove", function (e) {
+            if (drag) {
+                $window.css({
+                    top: e.clientY - offY,
+                    left: e.clientX - offX
+                });
+            }
+        }).on("mouseup", () => drag = false);
+
+    }
+
+
+
+    $("#browser-icon").on("click", function () {
+        openApp("browser", "https://calm-daffodil-7a888b.netlify.app/", "Browser", "images/browser.png");
+    });
+
+
+
+    $("#terminal-icon").on("click", function () {
+        openApp("terminal", "apps/terminal.html", "Terminal", "images/terminal.png");
+    });
+
+
+
+    $("#calc-icon").on("click", function () {
+        openApp("calc", "apps/calc.html", "Calculator", "images/calc.png");
+    });
+
+});
+
+
+
+
+
+$("#start-btn").on("click", function (e) {
+    e.stopPropagation();
+    $("#start-menu").fadeToggle(150);
+});
+
+
+
+
+$(document).on("click", function () {
+    $("#start-menu").fadeOut(150);
+});
+
+
+
+$(".start-item").on("click", function () {
+    const app = $(this).data("app");
+    if (app === "browser") $("#browser-icon").click();
+    if (app === "terminal") $("#terminal-icon").click();
+    if (app === "calc") $("#calc-icon").click();
+
+    $("#start-menu").fadeOut(100);
+});

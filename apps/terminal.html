@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SaadOS Terminal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: #020304;
+        font-family: Consolas, "Fira Code", monospace;
+        color: #00ff66;
+    }
+
+    #terminal {
+        box-sizing: border-box;
+        height: 100%;
+        width: 100%;
+        padding: 10px;
+        background: radial-gradient(circle at top left, #060d08 0%, #020304 55%, #000000 100%);
+        overflow-y: auto;
+        white-space: pre-wrap;
+    }
+
+    .line {
+        line-height: 1.4;
+        font-size: 0.9rem;
+    }
+
+    .prompt {
+        color: #00ff99;
+    }
+
+    .command {
+        color: #a8ffbf;
+    }
+
+    .output {
+        color: #7cff9e;
+    }
+
+    #input-line {
+        display: inline;
+    }
+
+    #cursor {
+        display: inline-block;
+        width: 8px;
+        background: #00ff66;
+        margin-left: 2px;
+        animation: blink 1s steps(1) infinite;
+    }
+
+    @keyframes blink {
+        0%   { opacity: 1; }
+        50%  { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    /* Scrollbar بسيط */
+    #terminal::-webkit-scrollbar {
+        width: 8px;
+    }
+    #terminal::-webkit-scrollbar-track {
+        background: #050807;
+    }
+    #terminal::-webkit-scrollbar-thumb {
+        background: #00aa55;
+    }
+</style>
+</head>
+<body>
+
+<div id="terminal">
+    <div class="line output">SaadOS Shell 0.1 (demo)</div>
+
+    <div class="line">
+        <span class="prompt">saad@saados</span>:<span class="command">~</span>$ 
+        <span id="input-line"></span><span id="cursor">&nbsp;</span>
+    </div>
+</div>
+
+<script src="terminal/terminal.js"></script>
+
+</body>
+</html>

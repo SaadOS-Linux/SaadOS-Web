@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>SaadOS Desktop</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
     @font-face {
         font-family: 'dos';
@@ -22,49 +23,46 @@
         user-select: none;
     }
 
-    /* Desktop area */
     #desktop {
         width: 100%;
-        height: 100%;
+        height: calc(100% - 40px);
         position: relative;
     }
 
-    /* App icon */
+    /* Icons */
     .icon {
         position: absolute;
         top: 60px;
         left: 60px;
         text-align: center;
         cursor: pointer;
-        transition: transform 0.2s ease;
+        transition: transform .2s;
     }
 
     .icon img {
         width: 64px;
         height: 64px;
         display: block;
-        margin: 0 auto;
+        margin: auto;
     }
 
     .icon span {
         display: block;
-        color: #bafbdc;
-        font-size: 0.9em;
+        color: #caffee;
         margin-top: 6px;
+        font-size: 0.85rem;
     }
 
-    .icon:hover {
-        transform: scale(1.08);
-    }
+    .icon:hover { transform: scale(1.1); }
 
-    /* Window styling */
+    /* Windows */
     .window {
         position: absolute;
         top: 120px;
         left: 200px;
         width: 800px;
         height: 500px;
-        background-color: #101a15;
+        background: #101a15;
         border: 1px solid #00ffaa55;
         border-radius: 8px;
         box-shadow: 0 0 20px #00ffaa22;
@@ -75,14 +73,14 @@
     }
 
     .window-header {
-        background-color: #082219;
+        background: #082219;
         color: #a0ffd9;
         padding: 6px 10px;
         display: flex;
-        align-items: center;
         justify-content: space-between;
+        align-items: center;
         cursor: move;
-        font-size: 0.9em;
+        font-size: .9rem;
         user-select: none;
     }
 
@@ -107,30 +105,124 @@
         height: 100%;
         border: none;
         flex: 1;
-        background: #0d1511;
+        background: #0f1814;
     }
 
-    @keyframes fadeIn {
-        from {opacity: 0;}
-        to {opacity: 1;}
+    #taskbar {
+        width: 100%;
+        height: 40px;
+        background: #04110b;
+        border-top: 1px solid #00ffaa33;
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        box-shadow: 0 -2px 10px #00000055;
     }
 
-    @keyframes fadeOut {
-        from {opacity: 1;}
-        to {opacity: 0;}
+    #task-items {
+        display: flex;
+        gap: 8px;
     }
+
+    .task-icon {
+        padding: 6px 12px;
+        background: #082219;
+        border-radius: 6px;
+        border: 1px solid #00ffaa33;
+        color: #baffee;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .task-icon:hover { background: #0b2b20; }
+/* Start Button */
+#start-btn {
+    font-family: 'dos', monospace;
+    font-weight: bold;
+    font-size: 1.4rem;
+    width: 40px;
+    height: 28px;
+    background: #082219;
+    color: #00ffaa;
+    border: 1px solid #00ffaa44;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: 0.2s;
+}
+
+#start-btn:hover {
+    background: #0b2b20;
+}
+
+/* Start Menu */
+#start-menu {
+    position: fixed;
+    bottom: 40px;
+    left: 10px;
+    width: 220px;
+    background: #04110b;
+    border: 1px solid #00ffaa44;
+    box-shadow: 0 0 12px #00000066;
+    border-radius: 8px;
+    display: none;
+    flex-direction: column;
+    padding: 10px;
+    z-index: 99999;
+}
+
+.start-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    background: #082219;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 6px;
+    color: #baffee;
+    transition: 0.2s;
+}
+
+.start-item img {
+    width: 22px;
+    height: 22px;
+}
+
+.start-item:hover {
+    background: #0c2e22;
+}
+
 </style>
+
 <script src="scripts/jq.min.js"></script>
 </head>
+
 <body>
+
 <div id="desktop">
-    <div class="icon" id="browser-icon">
-        <img src="images/browser.png" alt="SaadBrowser">
+
+    <div class="icon" id="browser-icon" style="top:60px; left:60px;">
+        <img src="images/browser.png">
         <span>SaadBrowser</span>
     </div>
 
+    <div class="icon" id="terminal-icon" style="top:60px; left:150px;">
+        <img src="images/terminal.png">
+        <span>Terminal</span>
+    </div>
+
+    <!-- Calculator Icon -->
+    <div class="icon" id="calc-icon" style="top:60px; left:240px;">
+        <img src="images/calc.png">
+        <span>Calculator</span>
+    </div>
+
     <div class="window" id="browser-window">
-        <div class="window-header" id="browser-header">
+        <div class="window-header">
             <span>SaadBrowser</span>
             <div class="window-buttons">
                 <div class="min-btn"></div>
@@ -138,59 +230,54 @@
                 <div class="close-btn"></div>
             </div>
         </div>
-        <iframe id="browser-frame" src=""></iframe>
+        <iframe></iframe>
+    </div>
+
+    <div class="window" id="terminal-window">
+        <div class="window-header">
+            <span>Terminal</span>
+            <div class="window-buttons">
+                <div class="min-btn"></div>
+                <div class="max-btn"></div>
+                <div class="close-btn"></div>
+            </div>
+        </div>
+        <iframe src="apps/terminal.html"></iframe>
+    </div>
+
+    <div class="window" id="calc-window">
+        <div class="window-header">
+            <span>Calculator</span>
+            <div class="window-buttons">
+                <div class="min-btn"></div>
+                <div class="max-btn"></div>
+                <div class="close-btn"></div>
+            </div>
+        </div>
+        <iframe src="apps/calc.html"></iframe>
+    </div>
+
+</div>
+
+<div id="taskbar">
+    <button id="start-btn">S</button>
+<div id="start-menu">
+    <div class="start-item" data-app="browser">
+        <img src="images/browser.png"> SaadBrowser
+    </div>
+    <div class="start-item" data-app="terminal">
+        <img src="images/terminal.png"> Terminal
+    </div>
+    <div class="start-item" data-app="calc">
+        <img src="images/calc.png"> Calculator
     </div>
 </div>
 
-<script>
-$(function() {
-    const $window = $("#browser-window");
-    const $frame = $("#browser-frame");
-    const $icon = $("#browser-icon");
 
-    // open browser icon click
-    $icon.on("click", function() {
-        const confirmed = confirm("You are about to leave SaadOS and open an external website.\nDo you wish to continue?");
-        if (!confirmed) return;
-        $window.css("display", "flex").hide().fadeIn(300);
-        $frame.attr("src", "https://calm-daffodil-7a888b.netlify.app/");
-    });
+    <div id="task-items"></div>
+</div>
 
-    // close
-    $(".close-btn").on("click", function() {
-        $window.fadeOut(300, () => $frame.attr("src", ""));
-    });
+<script src="desktop.js"></script>
 
-    // minimize
-    $(".min-btn").on("click", function() {
-        $window.fadeOut(300);
-    });
-
-    // maximize / restore
-    let maximized = false;
-    $(".max-btn").on("click", function() {
-        if (!maximized) {
-            $window.css({top: "0", left: "0", width: "100%", height: "100%"});
-        } else {
-            $window.css({top: "120px", left: "200px", width: "800px", height: "500px"});
-        }
-        maximized = !maximized;
-    });
-
-    // drag window
-    let isDragging = false, offsetX, offsetY;
-    $("#browser-header").on("mousedown", function(e) {
-        isDragging = true;
-        const rect = $window[0].getBoundingClientRect();
-        offsetX = e.clientX - rect.left;
-        offsetY = e.clientY - rect.top;
-    });
-    $(document).on("mousemove", function(e) {
-        if (isDragging) {
-            $window.css({ top: e.clientY - offsetY, left: e.clientX - offsetX });
-        }
-    }).on("mouseup", function() { isDragging = false; });
-});
-</script>
 </body>
 </html>
