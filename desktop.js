@@ -124,6 +124,11 @@ $(function () {
         openApp("minesweeper", "apps/minesweeper.html", "Minesweeper", "images/minesweeper.png");
     });
 
+    $("#chess-icon").on("click", function () {
+        openApp("chess", "https://0xsaadcontainer.netlify.app/chess", "SaadChess", "images/chess.png");
+    });
+
+
 });
 
 
@@ -145,6 +150,7 @@ $(".start-item").on("click", function () {
     if (app === "terminal") $("#terminal-icon").click();
     if (app === "calc") $("#calc-icon").click();
     if (app === "Minesweeper") $("#mine-icon").click();
+    if (app === "SaadChess") $("#chess-icon").click();
 
     $("#start-menu").fadeOut(100);
 });
