@@ -154,3 +154,71 @@ $(".start-item").on("click", function () {
 
     $("#start-menu").fadeOut(100);
 });
+
+
+// ========================
+// WALLPAPER SYSTEM
+// ========================
+
+// اسم مجلد الخلفيات
+const wallpapersFolder = "wallpapers/";
+
+// هنا ضع أسماء صور الخلفيات الموجودة في المجلد
+const wallpapers = [
+    "images/wallpaper1.png",
+    "images/wallpaper2.png",
+    "images/wallpaper3.png",
+    "images/wallpaper4.png"
+];
+
+// تحميل الخلفية المحفوظة
+function loadSavedWallpaper() {
+    const saved = localStorage.getItem("saados_wallpaper");
+    if (saved) {
+        document.getElementById("desktop").style.backgroundImage = `url(${saved})`;
+    }
+}
+
+// تغيير الخلفية + الحفظ
+function setWallpaper(filename) {
+    const path = wallpapersFolder + filename;
+    document.getElementById("desktop").style.backgroundImage = `url(${path})`;
+    localStorage.setItem("saados_wallpaper", path);
+}
+
+// إنشاء عناصر الخلفيات داخل File Manager
+function loadWallpaperFiles() {
+    let container = document.getElementById("files-area");
+    container.innerHTML = "";
+
+    wallpapers.forEach(file => {
+        let div = document.createElement("div");
+        div.className = "wallpaper-item";
+        div.style.padding = "8px";
+        div.style.border = "1px solid #00ffaa33";
+        div.style.borderRadius = "6px";
+        div.style.marginBottom = "10px";
+        div.style.cursor = "pointer";
+        div.style.display = "flex";
+        div.style.alignItems = "center";
+        div.style.gap = "10px";
+
+        div.innerHTML = `
+            <img src="${wallpapersFolder + file}" style="width:60px;height:60px;border-radius:4px;">
+            <span>${file}</span>
+        `;
+
+        div.onclick = () => setWallpaper(file);
+
+        container.appendChild(div);
+    });
+}
+
+// تشغيل النظام عند بدء الصفحة
+loadSavedWallpaper();
+loadWallpaperFiles();
+
+
+document.getElementById("files-icon").onclick = () => {
+    openWindow("files-window");
+};

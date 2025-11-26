@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Wallpapers</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    @font-face {
+        font-family: 'dos';
+        src: url(../fonts/dos.ttf);
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background: #0d1a15;
+        font-family: 'dos', monospace;
+        color: #caffee;
+        user-select: none;
+    }
+
+    #wallpapers-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 18px;
+        padding: 20px;
+    }
+
+    .wall-item {
+        background: #082219;
+        border: 1px solid #00ffaa44;
+        border-radius: 8px;
+        padding: 10px;
+        cursor: pointer;
+        transition: .2s;
+        position: relative;
+    }
+
+    .wall-item:hover {
+        background: #0e3327;
+    }
+
+    .wall-item img {
+        width: 100%;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 6px;
+    }
+
+    .wall-name {
+        margin-top: 8px;
+        text-align: center;
+        font-size: 0.85rem;
+    }
+
+    /* Right Click Menu */
+    #context-menu {
+        position: absolute;
+        background: #04110b;
+        border: 1px solid #00ffaa55;
+        box-shadow: 0 0 8px #000;
+        width: 180px;
+        display: none;
+        flex-direction: column;
+        border-radius: 6px;
+        z-index: 9999;
+    }
+
+    .ctx-item {
+        padding: 10px;
+        cursor: pointer;
+        border-bottom: 1px solid #00ffaa22;
+        transition: .2s;
+    }
+
+    .ctx-item:hover {
+        background: #0c2e22;
+        color: #ffffff;
+    }
+
+</style>
+</head>
+
+<body>
+
+<div id="wallpapers-container"></div>
+
+<!-- Right Click Menu -->
+<div id="context-menu">
+    <div class="ctx-item" id="set-wallpaper-btn">Set as Wallpaper</div>
+</div>
+
+<script>
+// ========================
+// Wallpaper list
+// ضع الخلفيات هنا
+// ========================
+const wallpapers = [
+    "wall1.jpg",
+    "wall2.png",
+    "wall3.jpg",
+    "wall4.png"
+];
+
+const folder = "../wallpapers/"; // مسار الخلفيات داخل النظام
+
+let selectedWallpaper = null;
+
+// إنشاء الصور
+function loadWallpapers() {
+    let container = document.getElementById("wallpapers-container");
+    container.innerHTML = "";
+
+    wallpapers.forEach(file => {
+        let item = document.createElement("div");
+        item.className = "wall-item";
+        item.dataset.file = file;
+
+        item.innerHTML = `
+            <img src="${folder + file}">
+            <div class="wall-name">${file}</div>
+        `;
+
+        // Right-click
+        item.oncontextmenu = (e) => {
+            e.preventDefault();
+            selectedWallpaper = file;
+            openMenu(e.pageX, e.pageY);
+        };
+
+        container.appendChild(item);
+    });
+}
+
+// فتح قائمة كليك يمين
+function openMenu(x, y) {
+    const menu = document.getElementById("context-menu");
+    menu.style.display = "flex";
+    menu.style.left = x + "px";
+    menu.style.top = y + "px";
+}
+
+// إخفاء القائمة
+document.body.onclick = () => {
+    document.getElementById("context-menu").style.display = "none";
+};
+
+// عند ضغط "Set as Wallpaper"
+document.getElementById("set-wallpaper-btn").onclick = () => {
+    if (!selectedWallpaper) return;
+
+    const path = folder + selectedWallpaper;
+
+    // حفظ الخلفية للسيشن
+    localStorage.setItem("saados_wallpaper", path);
+
+    // إرسال طلب للنافذة الأم لتغيير الخلفية فورًا
+    parent.postMessage({ type: "change-wallpaper", file: path }, "*");
+
+    alert("Wallpaper changed!");
+};
+
+// بداية
+loadWallpapers();
+</script>
+
+</body>
+</html>

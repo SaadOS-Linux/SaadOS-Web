@@ -27,6 +27,10 @@
         width: 100%;
         height: calc(100% - 40px);
         position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
     }
 
     /* Icons */
@@ -291,6 +295,29 @@
         </div>
         <iframe></iframe>
     </div>
+
+
+    <!-- File Manager Window -->
+<div class="window" id="files-window">
+    <div class="window-header">
+        <span>File Manager</span>
+        <div class="window-buttons">
+            <div class="min-btn"></div>
+            <div class="max-btn"></div>
+            <div class="close-btn"></div>
+        </div>
+    </div>
+
+    <div id="files-area" style="padding: 10px; overflow-y: auto; color:#baffee; font-size:1rem;">
+        Loading wallpapers...
+    </div>
+</div>
+
+<!-- File Manager Icon -->
+<div class="icon" id="files-icon" style="top:60px; left:510px;">
+    <img src="images/folder.webp">
+    <span>Wallpapers</span>
+</div>
 
 
 
